@@ -1,0 +1,40 @@
+<script
+	src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.5/angular.min.js"></script>
+<script
+	src="https://cdnjs.cloudflare.com/ajax/libs/angular-resource/1.6.5/angular-resource.min.js"></script>
+
+
+var app = angular.module('app', ['ngResource']);
+
+app.factory('MyService', function() {
+	  return $resource('/api/student/:name');
+	});
+
+app.controller('home', function($scope, $http, $resource) {
+	var resource = $resource('/api/student/:name');
+	  
+	  var student = {};
+	  var students = [];
+	  $scope.student = student;
+	  
+	  
+	  students = resource.query(function() {
+		  console.log(students);
+	  });
+		  
+    $scope.deletar = function(student) {
+    	resource.delete({name: student.name});
+    	var index = students.indexOf(student);
+    	student.splice(index, 1);
+    }
+
+    $scope.salvar = function(student) {
+    	resource.save(student);
+    	students.push(student);
+    	student = {};
+    }
+    
+    $scope.student = students;
+
+
+})
